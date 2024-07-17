@@ -15,6 +15,7 @@ const REQUIRED_TASK = [
 	'Chambre 1: Dessin collaboratif',
 	'Entree: Prendre un selfie dans le miroir et 2 (non fun!)',
 ];
+
 const TASKS = [
 	"Salon: Dice faire 20 points",
 	'Cuisine: Vider/Remplir le lave-vaiselle',
@@ -28,6 +29,7 @@ const TASKS = [
 	'Salle de bain: nettoyer la vitre',
 	'Derriere: deplier les chaises er les mettre face au mur (ou inversement)',
 ];
+
 const LONG_TASKS = [
 	'Cuisine: Recuperer verre ou biere PUIS exterieur (piscine): boire son verre',
 	'Exterieur: deplacer la bouteille d eau d un a l autre',
@@ -36,7 +38,7 @@ const LONG_TASKS = [
 
 const N_LONG_TASK = 1;
 const N_TASKS = 8;
-const N_IMPOSTORS = 1;
+const N_IMPOSTORS = 2;
 
 const DEBUG = false;
 
