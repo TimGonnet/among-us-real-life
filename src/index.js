@@ -11,25 +11,34 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const TASKS = [
-	"Do 10 reps of machine exercise (Joe's Gym)",
-	'Pour water (Kitchen)',
-	'Sink 1 ball (Billards table)',
-	"Flip water bottle (Michael's room)",
-	'Wash your hands (basement bathroom)',
-	'Wash your hands (1st floor bathroom)',
-	'Take elevator',
-	'Spin 8, 9, or 10 in Life game (Hearth room)',
-	'Beat Smash (Upstairs guest room)',
-	'Hit a layup (Basketball court)',
-	'Take photo (Green screen)',
-	// 'Mess with Jack (basement)',
-	'Bounce ping pong ball 10 times (front door)',
-	'Take a lap (Around pool)',
-	'Flip a pillow (Activity room)'
+const REQUIRED_TASK = [
+	'Chambre 1: Dessin collaboratif',
+	'Entree: Prendre un selfie dans le miroir et 2 (non fun!)',
 ];
-const N_TASKS = 5;
+const TASKS = [
+	"Salon: Dice faire 20 points",
+	'Cuisine: Vider/Remplir le lave-vaiselle',
+	"Cuisine: Couper saucisson",
+	'Buanderie: Ramasser le linge PUIS Chambre 2: poser le linge ramasse sur le fil',
+	'Exterieur: Recupere un objet dans la piscine avec l epuisette',
+	'Exterieur: chanter le reveil du roi lion sur la terrase face a la piscine',
+	'Exterieur: Parking, danser la macarena',
+	'Garage: biere pong',
+	'Chambre de l ambiance: faire et defaire les deux lits',
+	'Salle de bain: nettoyer la vitre',
+	'Derriere: deplier les chaises er les mettre face au mur (ou inversement)',
+];
+const LONG_TASKS = [
+	'Cuisine: Recuperer verre ou biere PUIS exterieur (piscine): boire son verre',
+	'Exterieur: deplacer la bouteille d eau d un a l autre',
+	'Salon: Resoudre genius PUIS Chambre 3: coffre de geniu',
+];
+
+const N_LONG_TASK = 1;
+const N_TASKS = 8;
 const N_IMPOSTORS = 1;
+
+const DEBUG = true;
 
 let taskProgress = {};
 
@@ -45,8 +54,7 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 
 io.on('connection', socket => {
 	console.log(
-		`A user connected with role: ${socket.handshake.query.role}, total: ${
-			io.of('/').sockets.size
+		`A user connected with role: ${socket.handshake.query.role}, total: ${io.of('/').sockets.size
 		}`
 	);
 
@@ -77,25 +85,41 @@ io.on('connection', socket => {
 
 		// Pool of tasks so they are distributed evenly
 		let shuffledTasks = [];
+		let shuffledLongTasks = [];
 
 		// Dictionary with key as socket.id and value is array of tasks
 		const playerTasks = {};
 
 		// Assign tasks
 		taskProgress = {};
-		for (let i = 0; i < N_TASKS; i++) {
-			for (const player of players) {
-				// Make sure there's a pool of shuffled tasks
-				if (shuffledTasks.length === 0) {
-					shuffledTasks = _.shuffle(TASKS);
-				}
 
-				if (!playerTasks[player.id]) {
-					playerTasks[player.id] = {};
-				}
+		function chooseTask(task, prefix, debug) {
+			return debug ? prefix + ' ' + task : task;
+		}
 
+		for (const player of players) {
+			// Make sure there's a pool of shuffled tasks
+			if (shuffledTasks.length === 0) {
+				shuffledTasks = _.shuffle(TASKS);
+				shuffledLongTasks = _.shuffle(LONG_TASKS);
+			}
+
+			if (!playerTasks[player.id]) {
+				playerTasks[player.id] = {};
+			}
+
+			for (let i = 0; i < N_TASKS; i++) {
 				const taskId = uuid();
-				playerTasks[player.id][taskId] = shuffledTasks.pop();
+				let task;
+				if (i < REQUIRED_TASK.length) {
+					task = chooseTask(REQUIRED_TASK[i], 'R', DEBUG);
+				} else if (i >= REQUIRED_TASK.length && i < REQUIRED_TASK.length + N_LONG_TASK) {
+					task = chooseTask(shuffledLongTasks.pop(), 'L', DEBUG);
+				} else {
+					task = chooseTask(shuffledTasks.pop(), 'N', DEBUG);
+				}
+				playerTasks[player.id][taskId] = task;
+
 
 				if (!impostors.includes(player.id)) {
 					taskProgress[taskId] = false;

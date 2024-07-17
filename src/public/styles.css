@@ -15,3 +15,9 @@ img {
 #enable-sound {
 	display: block;
 }
+li {
+	font-size: larger;
+	label {
+		display: block;
+	}
+}
