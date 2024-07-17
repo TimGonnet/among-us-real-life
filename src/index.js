@@ -38,7 +38,7 @@ const N_LONG_TASK = 1;
 const N_TASKS = 8;
 const N_IMPOSTORS = 1;
 
-const DEBUG = true;
+const DEBUG = false;
 
 let taskProgress = {};
 
@@ -83,9 +83,6 @@ io.on('connection', socket => {
 			}
 		}
 
-		// Pool of tasks so they are distributed evenly
-		let shuffledTasks = [];
-		let shuffledLongTasks = [];
 
 		// Dictionary with key as socket.id and value is array of tasks
 		const playerTasks = {};
@@ -98,25 +95,32 @@ io.on('connection', socket => {
 		}
 
 		for (const player of players) {
+			// Pool of tasks so they are distributed evenly
+			let shuffledTasks = [];
+			let shuffledLongTasks = [];
+
 			// Make sure there's a pool of shuffled tasks
 			if (shuffledTasks.length === 0) {
-				shuffledTasks = _.shuffle(TASKS);
-				shuffledLongTasks = _.shuffle(LONG_TASKS);
+				shuffledTasks = _.shuffle([...TASKS]);
+				shuffledLongTasks = _.shuffle([...LONG_TASKS]);
 			}
 
 			if (!playerTasks[player.id]) {
 				playerTasks[player.id] = {};
 			}
 
+			const nbRequired = REQUIRED_TASK.length
+			const nbRequiredAndLong = nbRequired + N_LONG_TASK
+
 			for (let i = 0; i < N_TASKS; i++) {
 				const taskId = uuid();
 				let task;
-				if (i < REQUIRED_TASK.length) {
+				if (i < nbRequired) {
 					task = chooseTask(REQUIRED_TASK[i], 'R', DEBUG);
-				} else if (i >= REQUIRED_TASK.length && i < REQUIRED_TASK.length + N_LONG_TASK) {
-					task = chooseTask(shuffledLongTasks.pop(), 'L', DEBUG);
+				} else if (i >= nbRequired && i < nbRequiredAndLong) {
+					task = chooseTask(shuffledLongTasks[i - nbRequired], 'L', DEBUG);
 				} else {
-					task = chooseTask(shuffledTasks.pop(), 'N', DEBUG);
+					task = chooseTask(shuffledTasks[i - nbRequiredAndLong], 'N', DEBUG);
 				}
 				playerTasks[player.id][taskId] = task;
 
