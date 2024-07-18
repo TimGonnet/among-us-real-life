@@ -36,13 +36,13 @@ const LONG_TASKS = [
 	'Chambre Cyril&Valentine: jeter les dés du genius, retenir les dés (ou photo) coffre de genius PUIS Salon: Résoudre genius',
 ];
 
-const N_LONG_TASK = 1;
-const N_TASKS = 8;
-const N_IMPOSTORS = 1;
-const TIMER_KILL = 30;
-const FIRST_TIMER_KILL = 60;
+const N_LONG_TASK = +(process.env.N_LONG_TASK) ?? 1;
+const N_TASKS = +(process.env.N_TASKS) ?? 8;
+const N_IMPOSTORS = +(process.env.N_IMPOSTORS) ?? 1;
+const TIMER_KILL = +(process.env.TIMER_KILL) ?? 30;
+const FIRST_TIMER_KILL = +(process.env.FIRST_TIMER_KILL) ?? 60;
 
-const DEBUG = false;
+const DEBUG = !!process.env.DEBUG || false;
 
 let taskProgress = {};
 let round = 0;
