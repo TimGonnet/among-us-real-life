@@ -5,9 +5,13 @@ const socket = io({
 });
 
 const startGame$ = document.querySelector('#start-game');
-
 startGame$.addEventListener('click', () => {
 	socket.emit('start-game');
+});
+
+const startRound$ = document.querySelector('#start-round');
+startRound$.addEventListener('click', () => {
+	socket.emit('start-round');
 });
 
 /**

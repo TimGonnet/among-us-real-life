@@ -9,7 +9,7 @@ const { v4: uuid } = require('uuid');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, { connectionStateRecovery: {} });
 
 const REQUIRED_TASK = [
 	'Chambre Billy/Ana: Participer au dessin collaboratif',
@@ -38,11 +38,16 @@ const LONG_TASKS = [
 
 const N_LONG_TASK = 1;
 const N_TASKS = 8;
-const N_IMPOSTORS = 2;
+const N_IMPOSTORS = 1;
+const TIMER_KILL = 30;
+const FIRST_TIMER_KILL = 60;
 
 const DEBUG = false;
 
 let taskProgress = {};
+let round = 0;
+let alive;
+let isBombActive = false;
 
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, 'views', 'index.html'));
@@ -61,6 +66,7 @@ io.on('connection', socket => {
 	);
 
 	socket.on('start-game', () => {
+		round = 1;
 		// Get player sockets
 		const players = [];
 		for (const [_, socket] of io.of('/').sockets) {
@@ -70,6 +76,7 @@ io.on('connection', socket => {
 		}
 		const playerIds = players.map(player => player.id);
 		console.log('player sockets', players.length);
+		alive = players.length;
 
 		// Assign impostors
 		const impostors = _.shuffle(playerIds).slice(0, N_IMPOSTORS);
@@ -84,7 +91,6 @@ io.on('connection', socket => {
 				}
 			}
 		}
-
 
 		// Dictionary with key as socket.id and value is array of tasks
 		const playerTasks = {};
@@ -165,6 +171,34 @@ io.on('connection', socket => {
 		}
 		emitTaskProgress();
 	});
+
+	socket.on('start-round', () => {
+		io.emit('can-kill', false)
+		let timer;
+		if (round === 1) {
+			timer = FIRST_TIMER_KILL;
+		} else {
+			timer = TIMER_KILL;
+		}
+		setTimeout(() => {
+			io.emit('can-kill', true)
+		}, timer * 1000);
+	});
+
+	socket.on('killed', () => {
+		alive--;
+		console.log('Alive:', alive)
+	})
+
+	socket.on('start-bomb', () => {
+		isBombActive = true;
+		io.emit('play-bomb')
+	})
+
+	socket.on('stop-bomb', () => {
+		isBombActive = false;
+		io.emit('stop-bomb')
+	})
 });
 
 function emitTaskProgress() {
@@ -172,6 +206,7 @@ function emitTaskProgress() {
 	const completed = tasks.filter(task => task).length;
 	const total = completed / tasks.length;
 	io.emit('progress', total);
+	console.debug('progress', total)
 
 	if (total === 1) {
 		io.emit('play-win');

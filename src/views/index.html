@@ -25,9 +25,23 @@
 		<img src="/images/emergency-meeting.jpg" />
 	</button>
 
+	<button id="killed">
+		<img src="/images/death.png" />
+	</button>
+
+	<button id="bomb">
+		<img src="/images/bomb.png" />
+	</button>
+
 	<p>Progress is <span id="progress">0</span>% complete</p>
 	<div class="progress">
 		<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 0%"></div>
+	</div>
+
+	<div id="role"></div>
+	<div id="can-kill" style="display: inline-block;">
+		<span>Kill: </span><img id="kill-image" src="images/ko.png" width="20" height="20"
+			style="width: unset; display: inline-block;" />
 	</div>
 
 	<h2>Tasks</h2>
