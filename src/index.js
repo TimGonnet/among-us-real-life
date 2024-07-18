@@ -27,7 +27,7 @@ const TASKS = [
 	"Garage: Réussir le bière pong, se mettre sur la ligne d'ombre et mettre la capsule dans les verres",
 	"Chambre de l'ambiance: Faire et défaire les deux lits",
 	'Salle de bain: Nettoyer la vitre',
-	'Derrière: Déplier les chaises et les mettre face au mur (ou inversement)',
+	'Derrière: Déplier les chaises et les mettre face au mur (ou inversement)'
 ];
 
 const LONG_TASKS = [
