@@ -12,28 +12,28 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 const REQUIRED_TASK = [
-	'Chambre 1: Dessin collaboratif',
-	'Entree: Prendre un selfie dans le miroir et 2 (non fun!)',
+	'Chambre Billy/Ana: Participer au dessin collaboratif',
+	"Entrée: Prendre un selfie à 2 personnes dans le miroir sans s'amuser!",
 ];
 
 const TASKS = [
-	"Salon: Dice faire 20 points",
-	'Cuisine: Vider/Remplir le lave-vaiselle',
-	"Cuisine: Couper saucisson",
-	'Buanderie: Ramasser le linge PUIS Chambre 2: poser le linge ramasse sur le fil',
-	'Exterieur: Recupere un objet dans la piscine avec l epuisette',
-	'Exterieur: chanter le reveil du roi lion sur la terrase face a la piscine',
-	'Exterieur: Parking, danser la macarena',
-	'Garage: biere pong',
-	'Chambre de l ambiance: faire et defaire les deux lits',
-	'Salle de bain: nettoyer la vitre',
-	'Derriere: deplier les chaises er les mettre face au mur (ou inversement)',
+	"Salon: Dice faire 20 points avec max 4 dés",
+	'Cuisine: Vider/Remplir 6 trucs du lave-vaiselle',
+	"Cuisine: Couper 6 tranches de saucisson",
+	'Chambre Thomas&Marina: Ramasser 6 vêtements PUIS Buanderie: étendre le linge sur le fil',
+	"Exterieur: Récupère un objet dans la piscine avec l'épuisette",
+	'Exterieur: Chanter le réveil du roi lion sur la terrasse face a la piscine (20s)',
+	'Exterieur Parking: Danser la macarena (20s)',
+	"Garage: Réussir le bière pong, se mettre sur la ligne d'ombre et mettre la capsule dans les verres",
+	"Chambre de l'ambiance: Faire et défaire les deux lits",
+	'Salle de bain: Nettoyer la vitre',
+	'Derrière: Déplier les chaises et les mettre face au mur (ou inversement)',
 ];
 
 const LONG_TASKS = [
-	'Cuisine: Recuperer verre ou biere PUIS exterieur (piscine): boire son verre',
-	'Exterieur: deplacer la bouteille d eau d un a l autre',
-	'Salon: Resoudre genius PUIS Chambre 3: coffre de geniu',
+	'Cuisine: Récupérer un verre ou une bière PUIS extérieur (piscine): boire son verre',
+	"Extérieur: Faire un aller-retour avec la bonbonne d'eau d'un bout à l'autre du terrain",
+	'Chambre Cyril&Valentine: jeter les dés du genius, retenir les dés (ou photo) coffre de genius PUIS Salon: Résoudre genius',
 ];
 
 const N_LONG_TASK = 1;
