@@ -69,14 +69,16 @@ socket.on('tasks', tasks => {
 		// checkbox.name = "name";
 		checkbox$.classList.add("task-checkbox");
 		checkbox$.id = taskId;
-		checkbox$.onchange = event => {
-			console.log('checkbox change', event.target.checked);
-			if (event.target.checked) {
-				socket.emit('task-complete', taskId);
-			} else {
-				socket.emit('task-incomplete', taskId);
-			}
-		};
+		if (role !== 'Impostor') {
+			checkbox$.onchange = event => {
+				console.log('checkbox change', event.target.checked);
+				if (event.target.checked) {
+					socket.emit('task-complete', taskId);
+				} else {
+					socket.emit('task-incomplete', taskId);
+				}
+			};
+		}
 
 		label$.appendChild(checkbox$);
 		label$.appendChild(document.createTextNode(task));
