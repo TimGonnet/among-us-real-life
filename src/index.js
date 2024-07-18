@@ -148,6 +148,7 @@ io.on('connection', socket => {
 		}
 
 		emitTaskProgress();
+		io.emit('stop-bomb')
 	});
 
 	socket.on('report', () => {
